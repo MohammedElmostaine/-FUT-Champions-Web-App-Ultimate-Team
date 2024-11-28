@@ -1,0 +1,98 @@
+.bgcardplayer{
+background-image: url('/assets/img/badge (40 x 60 px).svg'   );
+}
+
+#playerReserveGrid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 90vh;
+    background-color: aliceblue;
+    overflow: scroll;
+    width: 80%;
+    border-radius: 40px;
+    background: rgba(0, 0, 0, 0.16);
+    backdrop-filter: blur(10px);
+  }
+  
+  .player-card {
+    background-image: url(../img/badge_gold.webp);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 250px;
+    height: 379px;
+    border-radius: 15px;
+    text-align: center;
+    padding: 20px;
+    margin: 10px;
+    position: relative;
+    font-size: 14px;
+    color: #4d331f;
+  }
+  .player-card .photo {
+    
+    position: absolute;
+  transform: translate(-50%, -50%);
+  top: 46%;
+  left: 60%;
+    width: 135px;
+  }
+  .player-card .rating {
+    position: absolute;
+  transform: translate(-50%, -50%);
+  top: 25%;
+  left: 25%;
+    font-size: 41px;
+    font-weight: bold;
+    color: #4d331f;
+  }
+  .player-card .position {
+    position: absolute;
+  transform: translate(-50%, -50%);
+  top: 35%;
+  left: 25%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4d331f;
+  }
+  .player-card .stats {
+   
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 74%;
+    left: 55%;
+    width: 213px;
+    font-weight: bold;
+    color: #4d331f;
+  }
+  .player-card .stat {
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    color: #4d331f;
+  }
+  .player-card .logo {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 84%;
+    left:60%;
+    width: 32px;
+  }
+  .player-card .name {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 67%;
+    left: 55%;
+    color: #4d331f;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .player-card .flag {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 84%;
+    left: 44%;
+    width: 27px;
+  }

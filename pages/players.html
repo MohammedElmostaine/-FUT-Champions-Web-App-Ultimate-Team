@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <script src="../assets/js/players.js" defer></script>
+    <title>Document</title>
+</head>
+<body class="bg-gray-700">
+
+    <!-- Header Section -->
+    <header class="flex justify-between items-center px-6 py-4 bg-black text-white">
+        <div class="flex items-center">
+            <img src="../assets/img/09c949b08a1d3a1ad892b63be1db5d95-removebg-preview.png" class="h-12 mr-3">
+            <h1 class="text-xl font-bold hidden sm:block">FUT Team Builder</h1>
+        </div>
+
+        <nav class="hidden md:flex space-x-6 font-semibold text-base">
+            <a href="../index.html" class="hover:text-green-700">Lineup Builder</a>
+            <a href="players.html" class="hover:text-green-700">Players</a>
+            <a href="" class="hover:text-green-700">Squads</a>
+        </nav>
+
+        <div class="flex items-center space-x-4 hidden sm:block">
+            <button
+                class="bg-green-700 px-4 py-2 rounded-lg hover:bg-[#fcf7db] hover:text-green-700 duration-75 text-[#fcf7db] font-medium">Add Player</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menuToggle" class="md:hidden text-2xl">
+            <i class="ri-menu-3-fill text-[#fcf7db]"></i>
+        </button>
+    </header>
+
+    <!-- Sidebar Menu for Mobile -->
+
+    <div id="sidebar"
+        class="fixed top-0 left-0 w-64 h-full bg-black text-[#fcf7db] hidden transition-transform duration-300 z-50">
+        <div class="flex justify-between items-center px-6 py-4 bg-green-700">
+            <h2 class="text-lg font-bold">Menu</h2>
+            <button id="closeSidebar" class="text-2xl text-[#fcf7db]">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <nav class="mt-4 space-y-4">
+            <a href="../index.html" class="block px-4 py-2 hover:bg-gray-700">Lineup Builder</a>
+            <a href="players.html" class="block px-4 py-2 hover:bg-gray-700">Players</a>
+            <a href="" class="block px-4 py-2 hover:bg-gray-700">Squads</a>
+            <button
+                class="bg-green-700 px-4 py-2 rounded-lg hover:bg-[#fcf7db] hover:text-green-700 duration-75 text-[#fcf7db] font-medium w-[90%] mx-3">Add
+                Player</button>
+        </nav>
+    </div>
+    <div class="h-[50px]"></div>
+
+    <section > 
+        <div class=" h-[60px] bg-black w-[90%] justify-self-center rounded-lg">
+
+        </div>
+        <div class="grid w-[90%] min-h-[100px] grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  justify-self-center" id="playerGrid">
+
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+</body>
+</html>
