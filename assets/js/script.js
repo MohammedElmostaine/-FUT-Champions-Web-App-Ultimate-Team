@@ -75,9 +75,14 @@ const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 let storedPlayers = [];
-const playerGrid = document.getElementById('playerReserveGrid');
+let fildeplayerResCard = [];
+let storedPlayersFilde = localStorage.getItem('playersInFild') || [];
 
 
+const playerReserveGrid = document.getElementById('playerReserveGrid');
+const BtPlayerPosition = document.querySelectorAll('.BtPlayerPosition');
+
+const btRemvResPleyrGrid = document.getElementById('close')
 
 
 menuToggle.addEventListener('click', () => {
@@ -94,17 +99,14 @@ document.addEventListener('click', (event) => {
     }
 });
 
+btRemvResPleyrGrid.addEventListener('click', () => {
+    playerReserveGrid.classList.toggle('biden');
+    document.querySelector('.playerResSec').classList.toggle('flex');
+    document.querySelector('.playerResSec').classList.toggle('justify-center');
 
-// fetch('http://fut.codia-dev.com/data.json')
-//     .then((response) => response.json())
-//     .then((data) => {
-//         localStorage.setItem('players', JSON.stringify(data.players));
 
-//          storedPlayers = JSON.parse(localStorage.getItem('players')) || [];
+})
 
-//         console.log(storedPlayers);
-//     })
-//     .catch((error) => console.error('Error fetching player data:', error));
 
 
 const fetchPlayerData = async () => {
@@ -114,31 +116,67 @@ const fetchPlayerData = async () => {
         const data = await res.json();
         console.log(data.players);
 
-        // Store player data in localStorage
+
         localStorage.setItem('players', JSON.stringify(data.players));
-        storedPlayers = data.players; // Set storedPlayers to the fetched player data
+        storedPlayers = data.players;
     } catch (error) {
         console.log(error.message);
     }
 };
 fetchPlayerData();
 
-function showPlayers() {
+let a = null;
+
+BtPlayerPosition.forEach((button) => {
+    button.addEventListener('click', () => {
+
+        const parentDiv = button.closest('.positionPlayeer');
+        const positionId = parentDiv.id; // L'ID de la div parent, comme "CF", "GK", etc.
+
+        a = parentDiv;
+        console.log(a);
+
+
+        playerReserveGrid.classList.toggle('biden');
+        document.querySelector('.playerResSec').classList.toggle('flex');
+        document.querySelector('.playerResSec').classList.toggle('justify-center');
+
+
+        if (parentDiv && positionId) {
+
+            showPlayersByPosition(positionId, playerReserveGrid);
+        }
+    });
+});
+
+
+
+function showPlayersByPosition(position, grid) {
+    grid.innerHTML = ''; // Efface les anciens éléments affichés
+
     if (localStorage.length === 0) {
         console.log('No players found in localStorage.');
-        return; // Exit if no players in localStorage
+        return;
     }
 
-    storedPlayers = JSON.parse(localStorage.getItem('players')) || []; // Fetch players from localStorage
+    let storedPlayers = JSON.parse(localStorage.getItem('players')) || [];
+    let filteredPlayers = storedPlayers.filter((player) => player.position === position);
 
+    // Vérifie si des joueurs correspondent à la position
+    if (filteredPlayers.length === 0) {
+        const noPlayersMessage = document.createElement('p');
+        noPlayersMessage.textContent = `No players found for position ${position}.`;
+        grid.appendChild(noPlayersMessage);
+        return;
+    }
 
-    storedPlayers.forEach(player => {
-          // Create the player card
-          const playerCard = document.createElement("div");
-          playerCard.className = "player-card";
+    // Crée les cartes des joueurs correspondants
+    filteredPlayers.forEach((player) => {
+        const playerResCard = document.createElement('div');
+        playerResCard.className = 'player-card-small';
 
-          if (player.position === "GK") {
-            playerCard.innerHTML = `
+        if (player.position === 'GK') {
+            playerResCard.innerHTML = `
               <div class="rating">${player.rating}</div>
               <div class="position">${player.position}</div>
               <img class="photo" src="${player.photo}" alt="${player.name}">
@@ -154,8 +192,8 @@ function showPlayers() {
               <img class="flag" src="${player.flag}" alt="${player.nationality}">
               <img class="logo" src="${player.logo}" alt="${player.club}">
             `;
-          } else {
-            playerCard.innerHTML = `
+        } else {
+            playerResCard.innerHTML = `
               <div class="rating">${player.rating}</div>
               <div class="position">${player.position}</div>
               <img class="photo" src="${player.photo}" alt="${player.name}">
@@ -170,15 +208,39 @@ function showPlayers() {
               </div>
               <img class="flag" src="${player.flag}" alt="${player.nationality}">
               <img class="logo" src="${player.logo}" alt="${player.club}">
-             `;
-          };
+            `;
+        }
 
-        playerGrid.appendChild(playerCard);
-    }
-    )
-};
+        grid.appendChild(playerResCard);
+        playerResCard.addEventListener('click', () => {
+            console.log(player.name);
 
-showPlayers(storedPlayers);
+            
+            fildeplayerResCard = playerResCard.cloneNode(true);
+            console.log(fildeplayerResCard);
+            
+            storedPlayersFilde.push(player);
+            
+            
+            playerReserveGrid.classList.toggle('biden');
+            document.querySelector('.playerResSec').classList.toggle('flex');
+            document.querySelector('.playerResSec').classList.toggle('justify-center');
+
+            localStorage.setItem('playersInFild', JSON.stringify(storedPlayersFilde));
+            a.appendChild(fildeplayerResCard);
+            let result = storedPlayers.filter(element => !storedPlayersFilde.includes(element));
+            storedPlayers = result;
+            localStorage.setItem('players', JSON.stringify(storedPlayers));
+            console.log(result);
+            
+
+
+
+
+        })
+
+    });
+}
 
 
 
