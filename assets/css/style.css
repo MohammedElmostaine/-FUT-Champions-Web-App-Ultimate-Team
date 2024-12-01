@@ -218,3 +218,10 @@
     left: 44%;
     width: 13.5px; /* Half the original size */
 }
+
+.positionPlayeer{
+display: flex;
+justify-content: center;
+align-items: end;
+
+}

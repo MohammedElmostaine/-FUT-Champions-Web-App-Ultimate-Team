@@ -75,7 +75,7 @@ const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 let storedPlayers = [];
-let fildeplayerResCard = [];
+
 let storedPlayersFilde = localStorage.getItem('playersInFild') || [];
 
 
@@ -108,10 +108,10 @@ btRemvResPleyrGrid.addEventListener('click', () => {
 })
 
 
+const url = 'http://fut.codia-dev.com/data.json';
 
 const fetchPlayerData = async () => {
     try {
-        const url = 'http://fut.codia-dev.com/data.json';
         const res = await fetch(url);
         const data = await res.json();
         console.log(data.players);
@@ -211,33 +211,88 @@ function showPlayersByPosition(position, grid) {
             `;
         }
 
+
+
+        let fildeplayerCard = playerResCard.cloneNode(true);
+
+        console.log(fildeplayerCard);
+        
         grid.appendChild(playerResCard);
         playerResCard.addEventListener('click', () => {
             console.log(player.name);
-
-            
-            fildeplayerResCard = playerResCard.cloneNode(true);
-            console.log(fildeplayerResCard);
-            
             storedPlayersFilde.push(player);
-            
-            
+
             playerReserveGrid.classList.toggle('biden');
             document.querySelector('.playerResSec').classList.toggle('flex');
             document.querySelector('.playerResSec').classList.toggle('justify-center');
 
             localStorage.setItem('playersInFild', JSON.stringify(storedPlayersFilde));
-            a.appendChild(fildeplayerResCard);
+            a.innerHTML = "";
+            a.appendChild(fildeplayerCard);
             let result = storedPlayers.filter(element => !storedPlayersFilde.includes(element));
             storedPlayers = result;
             localStorage.setItem('players', JSON.stringify(storedPlayers));
             console.log(result);
+
+
+
+            fildeplayerCard.addEventListener('click', () => {
+                const parentfildDiv = fildeplayerCard.closest('.positionPlayeer');
+                const positionFildId = parentfildDiv.id;
+            
+                // Create a container for the action icons
+                const actionIcons = document.createElement('div');
+                actionIcons.className = 'action-icons';
+            
+                // Create "Change" Icon
+                const changeIcon = document.createElement('i');
+                changeIcon.className = 'fa fa-exchange'; // FontAwesome icon (you can replace with another library)
+                changeIcon.title = 'Change Player';
+                actionIcons.appendChild(changeIcon);
+            
+                // Create "Clear" Icon
+                const clearIcon = document.createElement('i');
+                clearIcon.className = 'fa fa-times'; // FontAwesome icon
+                clearIcon.title = 'Clear Position';
+                actionIcons.appendChild(clearIcon);
+            
+                // Append icons next to the player card
+                parentfildDiv.appendChild(actionIcons);
+            
+                // Handle "Change" functionality
+                changeIcon.addEventListener('click', () => {
+                    // Show the player selection grid
+                    playerReserveGrid.classList.toggle('biden');
+                    document.querySelector('.playerResSec').classList.toggle('flex');
+                    document.querySelector('.playerResSec').classList.toggle('justify-center');
+            
+                    // Load players for the position
+                    showPlayersByPosition(positionFildId, playerReserveGrid);
+                });
+            
+                // Handle "Clear" functionality
+                clearIcon.addEventListener('click', () => {
+                    // Clear the field position
+                    parentfildDiv.innerHTML = '';
+                    const positionIndex = storedPlayersFilde.findIndex(player => player.position === positionFildId);
+            
+                    // Remove from storedPlayersFilde
+                    if (positionIndex !== -1) {
+                        storedPlayersFilde.splice(positionIndex, 1);
+                        localStorage.setItem('playersInFild', JSON.stringify(storedPlayersFilde));
+            
+                        // Add the player back to the reserve list
+                        const clearedPlayer = storedPlayersFilde[positionIndex];
+                        storedPlayers.push(clearedPlayer);
+                        localStorage.setItem('players', JSON.stringify(storedPlayers));
+                    }
+                });
+            });
             
 
 
-
-
         })
+
 
     });
 }
