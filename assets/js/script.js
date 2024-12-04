@@ -19,20 +19,39 @@ if (menuToggle && sidebar && closeSidebar) {
     });
 }
 
+async function fetchPlayers() {
+    try {
+        // Vérifier si les joueurs existent déjà dans localStorage
+        const localData = localStorage.getItem('players');
+        if (localData) {
+            console.log('Loading players from localStorage...');
+            storedPlayers.push(...JSON.parse(localData)); // Mettre à jour la variable globale
+            showPlayers(storedPlayers);
+            return;
+        }
 
-fetch('https://fut.codia-dev.com/data.json')
-    .then((response) => response.json())
-    .then((data) => {
+        // Si aucune donnée n'est trouvée, les récupérer depuis l'API
+        console.log('Fetching players from API...');
+        const response = await fetch('https://fut.codia-dev.com/data.json');
+        const data = await response.json();
+
         if (data.players) {
-            
+            // Stocker les joueurs dans la variable globale et localStorage
+            storedPlayers.push(...data.players);
             localStorage.setItem('players', JSON.stringify(data.players));
 
-            showPlayers(data.players); 
+            // Afficher les joueurs
+            showPlayers(data.players);
         } else {
-            console.log('Players data is missing in the JSON response.');
+            console.error('Players data is missing in the API response.');
         }
-    })
-    .catch((error) => console.log('Failed to fetch players:', error));
+    } catch (error) {
+        console.error('Failed to fetch players:', error);
+    }
+}
+
+// Appeler fetchPlayers au chargement
+fetchPlayers();
 
 
 // Modal for adding a player to the bench
@@ -107,9 +126,9 @@ function showPlayers(players) {
     const playersContainer = document.getElementById('playerReserveGrid');
     playersContainer.innerHTML = '';  
 
-    const filteredPlayers = cardId 
-        ? players.filter(player => player.position === cardId) 
-        : players;
+    const filteredPlayers = players.filter(player => 
+        cardId ? player.position.includes(cardId.slice(0, 2)) : true
+      );
 
     filteredPlayers.forEach((player) => {
         const playerCard = document.createElement('div');
@@ -145,6 +164,9 @@ function showPlayers(players) {
           <img class="flag" src="${player.flag}" alt="${player.nationality}">
           <img class="logo" src="${player.logo}" alt="${player.club}">
           </div>
+          <div>
+                        <i class="absolute ri-delete-bin-6-line text-white text-sm bottom-2 left-0 cursor-pointer" data-id="${player.id}" id="deleteBtn"></i>
+                    </div>
         `;
     } else {
         selectedCard.innerHTML = `
@@ -164,10 +186,12 @@ function showPlayers(players) {
           <img class="flag" src="${player.flag}" alt="${player.nationality}">
           <img class="logo" src="${player.logo}" alt="${player.club}">
                     </div>
+                    <div>
+                        <i class="absolute ri-delete-bin-6-line text-white text-sm bottom-2 left-1 cursor-pointer" data-id="${player.id}" id="deleteBtn"></i>
+                    </div>
 
-        `;
-                attachDeleteEvent(player.id, selectedCard);
-            }
+        `;}
+        attachDeleteEvent(player.id, selectedCard);
     }});
     });
 }
