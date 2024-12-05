@@ -1,4 +1,4 @@
-// Mobile Sidebar Menu Function
+
 const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const closeSidebar = document.getElementById('closeSidebar');
@@ -20,37 +20,30 @@ if (menuToggle && sidebar && closeSidebar) {
 }
 
 async function fetchPlayers() {
-    try {
-        // Vérifier si les joueurs existent déjà dans localStorage
-        const localData = localStorage.getItem('players');
-        if (localData) {
-            console.log('Loading players from localStorage...');
-            storedPlayers.push(...JSON.parse(localData)); // Mettre à jour la variable globale
-            showPlayers(storedPlayers);
-            return;
-        }
-
-        // Si aucune donnée n'est trouvée, les récupérer depuis l'API
-        console.log('Fetching players from API...');
-        const response = await fetch('https://fut.codia-dev.com/data.json');
+    let localData = localStorage.getItem('players');
+    if (localData) {
+        storedPlayers = JSON.parse(localData);
+        showPlayers(storedPlayers);
+        renderPlayer(storedPlayers);
+    } else {
+        try {
+            const response = await fetch('https://fut.codia-dev.com/data.json');
         const data = await response.json();
 
-        if (data.players) {
-            // Stocker les joueurs dans la variable globale et localStorage
-            storedPlayers.push(...data.players);
-            localStorage.setItem('players', JSON.stringify(data.players));
-
-            // Afficher les joueurs
-            showPlayers(data.players);
-        } else {
-            console.error('Players data is missing in the API response.');
+            if (data.players) {
+                storedPlayers = data;
+                localStorage.setItem("players", JSON.stringify(data.players));
+                showPlayers(data.players);
+                renderPlayer(storedPlayers);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            
         }
-    } catch (error) {
-        console.error('Failed to fetch players:', error);
     }
 }
 
-// Appeler fetchPlayers au chargement
+
 fetchPlayers();
 
 
@@ -191,13 +184,13 @@ function showPlayers(players) {
                     </div>
 
         `;}
-        attachDeleteEvent(player.id, selectedCard);
+        deleteEvent(player.id, selectedCard);
     }});
     });
 }
 
 // delete function
-function attachDeleteEvent(playerId, cardElement) {
+function deleteEvent(playerId, cardElement) {
     const deleteBtn = cardElement.querySelector('#deleteBtn');
     if (deleteBtn) {
         deleteBtn.addEventListener('click', (e) => {
@@ -210,9 +203,33 @@ function attachDeleteEvent(playerId, cardElement) {
 }
 
 // Fetch players from localStorage and display them
-const storedPlayers = JSON.parse(localStorage.getItem('players')) || [];
+let storedPlayers = JSON.parse(localStorage.getItem('players')) || [];
 if (storedPlayers.length > 0) {
     showPlayers(storedPlayers); 
 } else {
     console.log('No players found in localStorage.');
 }
+
+
+
+
+
+
+function renderPlayer(data){
+    const container = document.getElementById("playersPgGrid");
+    console.log(data);
+       container.innerHTML = '';
+    data.forEach((player) => {
+        
+
+       const playerpgCard = document.createElement('div');
+       console.log(player);
+        
+       playerpgCard.innerHTML = generatePlayerCard(player);
+        container.appendChild(playerpgCard);
+        
+        
+          })
+}
+renderPlayer(storedPlayers)
+ 
